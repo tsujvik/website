@@ -100,7 +100,7 @@ function openEntry(item) {
   if (journal.open || openedItem) return;
   openedItem = item;
   journalContent.replaceChildren(document.getElementById(item.dataset.entry).content.cloneNode(true));
-
+  setupStrips(journalContent);
   const isTicket = item.classList.contains("ticket");
   item.classList.add(isTicket ? "is-ripping" : "is-opening");
 
@@ -142,3 +142,30 @@ journal.addEventListener("close", () => {
   openedItem.focus();
   openedItem = null;
 });
+
+function setupStrips(container) {
+  container.querySelectorAll(".photo-strip").forEach((strip) => {
+    const photos = strip.children;
+    if (photos.length < 2) return;
+
+    const nav = document.createElement("div");
+    nav.className = "strip-nav";
+    nav.innerHTML = '<button type="button" aria-label="Previous photo">‹</button>' +
+      [...photos].map(() => '<span class="strip-dot"></span>').join("") +
+      '<button type="button" aria-label="Next photo">›</button>';
+    strip.after(nav);
+
+    const [prev, next] = nav.querySelectorAll("button");
+    const dots = nav.querySelectorAll(".strip-dot");
+    const current = () => Math.round(strip.scrollLeft / strip.clientWidth);
+
+    function update() {
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === current()));
+    }
+
+    prev.addEventListener("click", () => strip.scrollBy({ left: -strip.clientWidth }));
+    next.addEventListener("click", () => strip.scrollBy({ left: strip.clientWidth }));
+    strip.addEventListener("scroll", update);
+    update();
+  });
+}
