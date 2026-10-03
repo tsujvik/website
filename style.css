@@ -404,7 +404,7 @@ h1 {
   .photo-stack .entry-photo.is-out { translate: -75% -24px; }
   @keyframes tuck {
     0% { translate: -75% -24px; rotate: -14deg; scale: 1.04; }
-    45% { translate: -25% 38%; rotate: -6deg; scale: 0.96; }
+    25% { translate: -25% 38%; rotate: -6deg; scale: 0.96; }
   }
 }
 
