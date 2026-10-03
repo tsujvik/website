@@ -20,5 +20,50 @@
                 <a href="contact">Contact</a>
             </nav>
         </header>
+
+        <main id="top">
+
+    <section class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-shards" aria-hidden="true"></div>
+
+      <!-- Chrome sculpture: curved lines warped and shined by the #chrome filter -->
+      <svg class="hero-chrome" viewBox="0 0 800 800" aria-hidden="true">
+        <defs>
+          <linearGradient id="metal" x1="0" y1="0" x2="0.35" y2="1">
+            <stop offset="0" stop-color="#0a0f2e"/>
+            <stop offset="0.14" stop-color="#c9cfe3"/>
+            <stop offset="0.22" stop-color="#ffffff"/>
+            <stop offset="0.3" stop-color="#3c4677"/>
+            <stop offset="0.38" stop-color="#0a0f2e"/>
+            <stop offset="0.5" stop-color="#8a93b0"/>
+            <stop offset="0.58" stop-color="#ffffff"/>
+            <stop offset="0.66" stop-color="#5b6690"/>
+            <stop offset="0.76" stop-color="#141a45"/>
+            <stop offset="0.88" stop-color="#e9ecf4"/>
+            <stop offset="1" stop-color="#8a93b0"/>
+          </linearGradient>
+
+          <filter id="chrome" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.007" numOctaves="1" seed="4" result="noise">
+              <animate attributeName="baseFrequency" dur="24s" values="0.007;0.010;0.007" repeatCount="indefinite"/>
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="70" xChannelSelector="R" yChannelSelector="G" result="warped"/>
+            <feGaussianBlur in="warped" stdDeviation="7" result="blur"/>
+            <feSpecularLighting in="blur" surfaceScale="7" specularConstant="1.3" specularExponent="28" lighting-color="#ffffff" result="spec">
+              <fePointLight x="150" y="-200" z="300"/>
+            </feSpecularLighting>
+            <feComposite in="spec" in2="warped" operator="in" result="specIn"/>
+            <feComposite in="warped" in2="specIn" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+          </filter>
+        </defs>
+
+        <g filter="url(#chrome)" fill="none" stroke="url(#metal)" stroke-linecap="round">
+          <path d="M60 620 C 220 420, 360 700, 520 420 S 760 160, 700 80" stroke-width="70"/>
+          <path d="M140 160 C 300 260, 300 480, 480 520 S 720 640, 780 520" stroke-width="44"/>
+          <path d="M380 60 C 420 260, 260 360, 320 560 S 520 760, 600 700" stroke-width="30"/>
+          <path d="M520 300 C 600 360, 700 300, 760 360" stroke-width="22"/>
+        </g>
+      </svg>
     </body>
 </html>
