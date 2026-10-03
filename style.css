@@ -360,15 +360,16 @@ h1 {
   float: none;
   width: 100%;
   margin: 0;
-  transition: translate 0.3s ease, rotate 0.3s ease;
+  z-index: 1;
+  rotate: 8deg;
+  translate: 10px 10px;
+  transition: translate 0.45s ease-in-out, rotate 0.45s ease-in-out, scale 0.45s ease-in-out;
 }
 
-.photo-stack .entry-photo:nth-last-child(1) { rotate: 3deg; }
-.photo-stack .entry-photo:nth-last-child(2) { rotate: -5deg; translate: -10px 6px; }
-.photo-stack .entry-photo:nth-last-child(3) { rotate: 8deg; translate: 10px 10px; }
+.photo-stack .entry-photo[data-pos="0"] { z-index: 3; rotate: 3deg; translate: 0 0; }
+.photo-stack .entry-photo[data-pos="1"] { z-index: 2; rotate: -5deg; translate: -10px 6px; }
 
-.photo-stack .entry-photo.is-leaving { translate: -75% -16px; rotate: -12deg; }
-.photo-stack .entry-photo.no-anim { transition: none; }
+.photo-stack .entry-photo.is-out { translate: -105% -18px; rotate: -14deg; scale: 1.04; }
 
 .stack-nav {
   grid-row: 2;
@@ -394,5 +395,5 @@ h1 {
 
 @media (max-width: 700px) {
   .photo-stack { float: none; width: 170px; margin: 8px auto 32px; }
-  .photo-stack .entry-photo.is-leaving { translate: -60% -16px; }
+  .photo-stack .entry-photo.is-out { translate: -75% -24px; }
 }
