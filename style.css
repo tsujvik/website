@@ -371,6 +371,12 @@ h1 {
 
 .photo-stack .entry-photo.is-out { translate: -105% -18px; rotate: -14deg; scale: 1.04; }
 
+.photo-stack .entry-photo.is-tucking { animation: tuck 0.9s ease-in-out; }
+@keyframes tuck {
+  0% { translate: -105% -18px; rotate: -14deg; scale: 1.04; }
+  45% { translate: -35% 38%; rotate: -6deg; scale: 0.96; }
+}
+
 .stack-nav {
   grid-row: 2;
   display: flex;
@@ -396,4 +402,12 @@ h1 {
 @media (max-width: 700px) {
   .photo-stack { float: none; width: 170px; margin: 8px auto 32px; }
   .photo-stack .entry-photo.is-out { translate: -75% -24px; }
+  @keyframes tuck {
+    0% { translate: -75% -24px; rotate: -14deg; scale: 1.04; }
+    45% { translate: -25% 38%; rotate: -6deg; scale: 0.96; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-stack .entry-photo.is-tucking { animation: none; }
 }

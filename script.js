@@ -119,7 +119,6 @@ document.querySelectorAll(".scrap[data-entry]").forEach((item) => {
     startY = e.clientY;
   });
 
-  // If the pointer barely moved, it was a tap, not a drag
   item.addEventListener("pointerup", (e) => {
     if (Math.hypot(e.clientX - startX, e.clientY - startY) < 6) openEntry(item);
   });
@@ -162,7 +161,23 @@ function setupStacks(container) {
     const settleTime = reduceMotion ? 0 : 450;
     let busy = false;
 
-    function flip(card, newOrder) {
+    function sendToBack(card, newOrder) {
+      busy = true;
+      card.classList.add("is-out");
+      setTimeout(() => {
+        order = newOrder;
+        layout();
+        card.classList.remove("is-out");
+        if (reduceMotion) { busy = false; return; }
+        card.classList.add("is-tucking");
+        card.addEventListener("animationend", () => {
+          card.classList.remove("is-tucking");
+          busy = false;
+        }, { once: true });
+      }, pullTime);
+    }
+
+    function bringToFront(card, newOrder) {
       busy = true;
       card.classList.add("is-out");
       setTimeout(() => {
@@ -175,13 +190,13 @@ function setupStacks(container) {
 
     nextBtn.addEventListener("click", () => {
       if (busy) return;
-      flip(order[0], [...order.slice(1), order[0]]);
+      sendToBack(order[0], [...order.slice(1), order[0]]);
     });
 
     prevBtn.addEventListener("click", () => {
       if (busy) return;
       const bottom = order[order.length - 1];
-      flip(bottom, [bottom, ...order.slice(0, -1)]);
+      bringToFront(bottom, [bottom, ...order.slice(0, -1)]);
     });
   });
 }
