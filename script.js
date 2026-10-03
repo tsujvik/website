@@ -3,9 +3,20 @@ const scraps = [...board.querySelectorAll(".scrap")];
 const wideScreen = window.matchMedia("(min-width: 701px)");
 let topZ = 10;
 
+const storageKey = () => (wideScreen.matches ? "scrapbook-desktop" : "scrapbook-mobile");
+
 scraps.forEach((s) => {
   s.dataset.home = JSON.stringify({ left: s.style.left, top: s.style.top, r: s.style.getPropertyValue("--r") });
 });
+
+function homeOf(s) {
+  const home = JSON.parse(s.dataset.home);
+  if (!wideScreen.matches) {
+    const [left, top] = s.dataset.mobile.split(" ");
+    return { ...home, left, top };
+  }
+  return home;
+}
 
 function place(s, { left, top, r }) {
   s.style.left = left;
@@ -15,17 +26,21 @@ function place(s, { left, top, r }) {
 
 function save() {
   const layout = scraps.map((s) => ({ left: s.style.left, top: s.style.top, r: s.style.getPropertyValue("--r") }));
-  try { localStorage.setItem("scrapbook", JSON.stringify(layout)); } catch (e) {}
+  try { localStorage.setItem(storageKey(), JSON.stringify(layout)); } catch (e) {}
 }
 
-try {
-  const saved = JSON.parse(localStorage.getItem("scrapbook"));
-  if (saved && saved.length === scraps.length) scraps.forEach((s, i) => place(s, saved[i]));
-} catch (e) {}
+function applyLayout() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(storageKey())); } catch (e) {}
+  const useSaved = saved && saved.length === scraps.length;
+  scraps.forEach((s, i) => place(s, useSaved ? saved[i] : homeOf(s)));
+}
+
+applyLayout();
+wideScreen.addEventListener("change", applyLayout);
 
 scraps.forEach((s) => {
   s.addEventListener("pointerdown", (event) => {
-    if (!wideScreen.matches) return;
     event.preventDefault();
     s.setPointerCapture(event.pointerId);
     s.style.zIndex = ++topZ;
@@ -52,6 +67,7 @@ scraps.forEach((s) => {
 
     s.addEventListener("pointermove", move);
     s.addEventListener("pointerup", drop, { once: true });
+    s.addEventListener("pointercancel", drop, { once: true });
   });
 });
 
@@ -69,6 +85,6 @@ document.getElementById("shuffle").addEventListener("click", () => {
 });
 
 document.getElementById("reset").addEventListener("click", () => {
-  scraps.forEach((s) => place(s, JSON.parse(s.dataset.home)));
-  try { localStorage.removeItem("scrapbook"); } catch (e) {}
+  scraps.forEach((s) => place(s, homeOf(s)));
+  try { localStorage.removeItem(storageKey()); } catch (e) {}
 });
