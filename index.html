@@ -42,7 +42,7 @@
       </div>
 
       <div class="board">
-        <figure class="scrap polaroid taped" style="left: 4%; top: 6%; --r: -6deg" data-mobile="4% 2%">
+        <figure class="scrap polaroid taped" style="left: 4%; top: 6%; --r: -6deg" data-mobile="4% 2%" data-entry="entry-hackathon" tabindex="0" role="button" aria-label="Open: first hackathon">
           <div class="placeholder" style="--hue: 228">Photo</div>
           <figcaption>first hackathon!!</figcaption>
         </figure>
@@ -51,7 +51,7 @@
           currently learning:<br>Unity + C#
         </div>
 
-        <div class="scrap ticket" style="left: 46%; top: 4%; --r: -2deg" data-mobile="30% 24%">
+        <div class="scrap ticket" style="left: 46%; top: 4%; --r: -2deg" data-mobile="30% 24%" data-entry="entry-amp" tabindex="0" role="button" aria-label="Open: Jane Street AMP">
           <div class="ticket-main">
             <span class="ticket-label">Admit one</span>
             <strong>Jane Street AMP</strong>
@@ -60,7 +60,7 @@
           <div class="ticket-stub">No. 079</div>
         </div>
 
-        <figure class="scrap polaroid taped" style="left: 74%; top: 8%; --r: 7deg" data-mobile="50% 37%">
+        <figure class="scrap polaroid taped" style="left: 74%; top: 8%; --r: 7deg" data-mobile="50% 37%" data-entry="entry-photo2" tabindex="0" role="button" aria-label="Open: put something here">
           <div class="placeholder" style="--hue: 255">Photo</div>
           <figcaption>put something here</figcaption>
         </figure>
@@ -75,7 +75,7 @@
           </svg>
         </div>
 
-        <figure class="scrap polaroid taped" style="left: 48%; top: 46%; --r: -4deg" data-mobile="6% 70%">
+        <figure class="scrap polaroid taped" style="left: 48%; top: 46%; --r: -4deg" data-mobile="6% 70%" data-entry="entry-sketchbook" tabindex="0" role="button" aria-label="Open: sketchbook page">
           <div class="placeholder" style="--hue: 215">Photo</div>
           <figcaption>sketchbook page</figcaption>
         </figure>
@@ -86,6 +86,68 @@
       </div>
     </div>
   </main>
+
+  <dialog id="journal" class="journal">
+    <article class="page">
+      <form method="dialog"><button class="page-close">Close</button></form>
+      <div class="page-content"></div>
+    </article>
+  </dialog>
+
+  <template id="entry-amp">
+    <p class="entry-date">placeholder</p>
+    <h2>Jane Street AMP</h2>
+    <figure class="entry-photo">
+      <div class="placeholder" style="--hue: 228">Photo</div>
+      <figcaption>placeholder</figcaption>
+    </figure>
+    <h3>placeholder</h3>
+    <p>placeholder</p>
+    <h3>placeholder</h3>
+    <p>placeholder</p>
+    <h3>placeholder</h3>
+    <p>placeholder</p>
+    <p class="margin-note">placeholder</p>
+  </template>
+
+  <template id="entry-hackathon">
+    <p class="entry-date">placeholder</p>
+    <h2>first hackathon!!</h2>
+    <figure class="entry-photo">
+      <div class="placeholder" style="--hue: 228">Photo</div>
+      <figcaption>placeholder</figcaption>
+    </figure>
+    <h3>placeholder</h3>
+    <p>placeholder</p>
+    <h3>placeholder</h3>
+    <p>placeholder</p>
+  </template>
+
+  <template id="entry-photo2">
+    <p class="entry-date">placeholder</p>
+    <h2>put something here</h2>
+    <figure class="entry-photo">
+      <div class="placeholder" style="--hue: 255">Photo</div>
+      <figcaption>placeholder</figcaption>
+    </figure>
+    <h3>placeholder</h3>
+    <p>placeholder</p>
+    <h3>placeholder</h3>
+    <p>placeholder</p>
+  </template>
+
+  <template id="entry-sketchbook">
+    <p class="entry-date">placeholder</p>
+    <h2>sketchbook page</h2>
+    <figure class="entry-photo">
+      <div class="placeholder" style="--hue: 215">Photo</div>
+      <figcaption>placeholder</figcaption>
+    </figure>
+    <h3>placeholder</h3>
+    <p>placeholder</p>
+    <h3>placeholder</h3>
+    <p>placeholder</p>
+  </template>
 
 </body>
 </html>

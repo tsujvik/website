@@ -88,3 +88,57 @@ document.getElementById("reset").addEventListener("click", () => {
   scraps.forEach((s) => place(s, homeOf(s)));
   try { localStorage.removeItem(storageKey()); } catch (e) {}
 });
+
+
+// journal
+const journal = document.getElementById("journal");
+const journalContent = journal.querySelector(".page-content");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let openedItem = null;
+
+function openEntry(item) {
+  if (journal.open || openedItem) return;
+  openedItem = item;
+  journalContent.replaceChildren(document.getElementById(item.dataset.entry).content.cloneNode(true));
+
+  const isTicket = item.classList.contains("ticket");
+  item.classList.add(isTicket ? "is-ripping" : "is-opening");
+
+  const wait = reduceMotion ? 0 : isTicket ? 800 : 350;
+  setTimeout(() => {
+    journal.showModal();
+    journal.querySelector(".page").scrollTop = 0;
+  }, wait);
+}
+
+document.querySelectorAll(".scrap[data-entry]").forEach((item) => {
+  let startX = 0;
+  let startY = 0;
+
+  item.addEventListener("pointerdown", (e) => {
+    startX = e.clientX;
+    startY = e.clientY;
+  });
+
+  // difference between tap n drag 
+  item.addEventListener("pointerup", (e) => {
+    if (Math.hypot(e.clientX - startX, e.clientY - startY) < 6) openEntry(item);
+  });
+
+  item.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openEntry(item);
+    }
+  });
+});
+
+journal.addEventListener("click", (e) => {
+  if (e.target === journal) journal.close();
+});
+
+journal.addEventListener("close", () => {
+  openedItem.classList.remove("is-ripping", "is-opening");
+  openedItem.focus();
+  openedItem = null;
+});
