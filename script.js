@@ -89,8 +89,6 @@ document.getElementById("reset").addEventListener("click", () => {
   try { localStorage.removeItem(storageKey()); } catch (e) {}
 });
 
-
-// journal
 const journal = document.getElementById("journal");
 const journalContent = journal.querySelector(".page-content");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -100,7 +98,8 @@ function openEntry(item) {
   if (journal.open || openedItem) return;
   openedItem = item;
   journalContent.replaceChildren(document.getElementById(item.dataset.entry).content.cloneNode(true));
-  setupStrips(journalContent);
+  setupStacks(journalContent);
+
   const isTicket = item.classList.contains("ticket");
   item.classList.add(isTicket ? "is-ripping" : "is-opening");
 
@@ -120,7 +119,7 @@ document.querySelectorAll(".scrap[data-entry]").forEach((item) => {
     startY = e.clientY;
   });
 
-  // difference between tap n drag 
+  // If the pointer barely moved, it was a tap, not a drag
   item.addEventListener("pointerup", (e) => {
     if (Math.hypot(e.clientX - startX, e.clientY - startY) < 6) openEntry(item);
   });
@@ -143,29 +142,28 @@ journal.addEventListener("close", () => {
   openedItem = null;
 });
 
-function setupStrips(container) {
-  container.querySelectorAll(".photo-strip").forEach((strip) => {
-    const photos = strip.children;
-    if (photos.length < 2) return;
+function setupStacks(container) {
+  container.querySelectorAll(".photo-stack").forEach((stack) => {
+    let busy = false;
 
-    const nav = document.createElement("div");
-    nav.className = "strip-nav";
-    nav.innerHTML = '<button type="button" aria-label="Previous photo">‹</button>' +
-      [...photos].map(() => '<span class="strip-dot"></span>').join("") +
-      '<button type="button" aria-label="Next photo">›</button>';
-    strip.after(nav);
-
-    const [prev, next] = nav.querySelectorAll("button");
-    const dots = nav.querySelectorAll(".strip-dot");
-    const current = () => Math.round(strip.scrollLeft / strip.clientWidth);
-
-    function update() {
-      dots.forEach((d, i) => d.classList.toggle("is-active", i === current()));
+    function next() {
+      if (busy || stack.children.length < 2) return;
+      busy = true;
+      const top = stack.lastElementChild;
+      top.classList.add("is-leaving");
+      setTimeout(() => {
+        stack.prepend(top);
+        top.classList.remove("is-leaving");
+        busy = false;
+      }, reduceMotion ? 0 : 300);
     }
 
-    prev.addEventListener("click", () => strip.scrollBy({ left: -strip.clientWidth }));
-    next.addEventListener("click", () => strip.scrollBy({ left: strip.clientWidth }));
-    strip.addEventListener("scroll", update);
-    update();
+    stack.addEventListener("click", next);
+    stack.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        next();
+      }
+    });
   });
 }
