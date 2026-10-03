@@ -144,26 +144,41 @@ journal.addEventListener("close", () => {
 
 function setupStacks(container) {
   container.querySelectorAll(".photo-stack").forEach((stack) => {
+    const photos = () => stack.querySelectorAll(".entry-photo");
+    if (photos().length < 2) return;
     let busy = false;
 
-    function next() {
-      if (busy || stack.children.length < 2) return;
+    const nav = document.createElement("div");
+    nav.className = "stack-nav";
+    nav.innerHTML = '<button type="button" aria-label="Previous photo">‹</button>' +
+      '<button type="button" aria-label="Next photo">›</button>';
+    stack.prepend(nav);
+    const [prevBtn, nextBtn] = nav.querySelectorAll("button");
+    const wait = reduceMotion ? 0 : 300;
+
+    // Next: top photo slides off, then tucks in at the bottom of the pile
+    nextBtn.addEventListener("click", () => {
+      if (busy) return;
       busy = true;
-      const top = stack.lastElementChild;
+      const all = photos();
+      const top = all[all.length - 1];
       top.classList.add("is-leaving");
       setTimeout(() => {
-        stack.prepend(top);
+        stack.insertBefore(top, all[0]);
         top.classList.remove("is-leaving");
         busy = false;
-      }, reduceMotion ? 0 : 300);
-    }
+      }, wait);
+    });
 
-    stack.addEventListener("click", next);
-    stack.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        next();
-      }
+    prevBtn.addEventListener("click", () => {
+      if (busy) return;
+      busy = true;
+      const bottom = photos()[0];
+      bottom.classList.add("no-anim", "is-leaving");
+      stack.append(bottom);
+      bottom.offsetWidth;
+      bottom.classList.remove("no-anim", "is-leaving");
+      setTimeout(() => { busy = false; }, wait);
     });
   });
 }
