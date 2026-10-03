@@ -182,18 +182,21 @@ h1 {
 }
 .star svg { display: block; width: 100%; height: 100%; }
 
-/* phones * /
+/* phones */
 @media (max-width: 700px) {
   .scrapbook { padding-top: 3rem; }
-  .board { height: 920px; }
-  .polaroid { width: 150px; padding: 8px 8px 0; }
-  .polaroid figcaption { font-size: 1.15rem; padding: 0.4rem 0 0.6rem; }
-  .taped::before { width: 60px; height: 20px; top: -10px; }
-  .sticky { width: 140px; padding: 0.8rem 0.8rem 1.2rem; font-size: 1.25rem; }
-  .ticket { width: 210px; }
-  .ticket-main { padding: 0.75rem 0.85rem; }
-  .ticket-main strong { font-size: 1.25rem; }
-  .stamp { width: 95px; height: 110px; }
-  .stamp span { font-size: 1.25rem; padding: 0.9rem 0.6rem; }
-  .star { width: 80px; height: 80px; }
+  .board { height: 220vw; }
+  .polaroid { width: 38vw; padding: 2vw 2vw 0; }
+  .polaroid figcaption { font-size: 4.4vw; padding: 1.5vw 0 2.5vw; }
+  .taped::before { width: 16vw; height: 5vw; top: -2.6vw; }
+  .sticky { width: 34vw; padding: 3vw 3vw 4.5vw; font-size: 5vw; }
+  .ticket { width: 52vw; }
+  .ticket-main { padding: 3vw 3.5vw; }
+  .ticket-main span { font-size: 3.6vw; }
+  .ticket-main strong { font-size: 5vw; }
+  .ticket-label, .ticket-stub { font-size: 2.8vw; }
+  .ticket-stub { padding: 2vw 1.6vw; }
+  .stamp { width: 24vw; height: 28vw; outline-width: 5px; }
+  .stamp span { font-size: 4.6vw; padding: 3vw 2vw; }
+  .star { width: 20vw; height: 20vw; }
 }
