@@ -144,9 +144,12 @@ journal.addEventListener("close", () => {
 
 function setupStacks(container) {
   container.querySelectorAll(".photo-stack").forEach((stack) => {
-    const photos = () => stack.querySelectorAll(".entry-photo");
-    if (photos().length < 2) return;
-    let busy = false;
+    const photos = [...stack.querySelectorAll(".entry-photo")];
+    if (photos.length < 2) return;
+
+    let order = photos.slice().reverse();
+    const layout = () => order.forEach((p, i) => (p.dataset.pos = i));
+    layout();
 
     const nav = document.createElement("div");
     nav.className = "stack-nav";
@@ -154,31 +157,31 @@ function setupStacks(container) {
       '<button type="button" aria-label="Next photo">›</button>';
     stack.prepend(nav);
     const [prevBtn, nextBtn] = nav.querySelectorAll("button");
-    const wait = reduceMotion ? 0 : 300;
 
-    // Next: top photo slides off, then tucks in at the bottom of the pile
+    const pullTime = reduceMotion ? 0 : 420;
+    const settleTime = reduceMotion ? 0 : 450;
+    let busy = false;
+
+    function flip(card, newOrder) {
+      busy = true;
+      card.classList.add("is-out");
+      setTimeout(() => {
+        order = newOrder;
+        layout();
+        card.classList.remove("is-out");
+        setTimeout(() => (busy = false), settleTime);
+      }, pullTime);
+    }
+
     nextBtn.addEventListener("click", () => {
       if (busy) return;
-      busy = true;
-      const all = photos();
-      const top = all[all.length - 1];
-      top.classList.add("is-leaving");
-      setTimeout(() => {
-        stack.insertBefore(top, all[0]);
-        top.classList.remove("is-leaving");
-        busy = false;
-      }, wait);
+      flip(order[0], [...order.slice(1), order[0]]);
     });
 
     prevBtn.addEventListener("click", () => {
       if (busy) return;
-      busy = true;
-      const bottom = photos()[0];
-      bottom.classList.add("no-anim", "is-leaving");
-      stack.append(bottom);
-      bottom.offsetWidth;
-      bottom.classList.remove("no-anim", "is-leaving");
-      setTimeout(() => { busy = false; }, wait);
+      const bottom = order[order.length - 1];
+      flip(bottom, [bottom, ...order.slice(0, -1)]);
     });
   });
 }
