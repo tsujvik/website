@@ -165,10 +165,6 @@ function resetPeel(note) {
   journal.querySelector(".page").style.animation = "";
 }
 
-const curlTime = 450;
-const growTime = 550;
-const curlEase = "cubic-bezier(0.45, 0, 0.25, 1)";
-
 document.querySelectorAll(".scrap[data-entry]").forEach((item) => {
   let startX = 0;
   let startY = 0;
