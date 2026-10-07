@@ -193,6 +193,7 @@ journal.addEventListener("click", (e) => {
 journal.addEventListener("close", () => {
   openedItem.classList.remove("is-ripping", "is-opening", "is-peeling");
   journalContent.replaceChildren();
+  resetPeel(openedItem);
   openedItem.focus();
   openedItem = null;
 });

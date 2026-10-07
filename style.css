@@ -481,3 +481,11 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   .sticky.is-peeling, .sticky.is-peeling::after, .journal.from-sticky[open] .page { animation: none; }
 }
+
+.peel-flap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: polygon(100% 100%, 100% 100%, 100% 100%);
+  background: linear-gradient(135deg, #9aa7f2 35%, #d9defc 55%, #ffffff 65%);
+}
