@@ -99,7 +99,7 @@ function openEntry(item) {
   openedItem = item;
   journalContent.replaceChildren(document.getElementById(item.dataset.entry).content.cloneNode(true));
   setupStacks(journalContent);
-
+  if (item.classList.contains("sticky")) return peelOpen(item);
   const isTicket = item.classList.contains("ticket");
   const isSticky = item.classList.contains("sticky");
   item.classList.add(isTicket ? "is-ripping" : isSticky ? "is-peeling" : "is-opening");
@@ -111,6 +111,63 @@ function openEntry(item) {
     journal.querySelector(".page").scrollTop = 0;
   }, wait);
 }
+
+let peelAnims = [];
+
+function peelOpen(note) {
+  const page = journal.querySelector(".page");
+  const flap = document.createElement("span");
+  flap.className = "peel-flap";
+  note.append(flap);
+
+  const curlTime = 450;
+  const growTime = 550;
+  const curlEase = "cubic-bezier(0.45, 0, 0.25, 1)";
+
+  // 1) bottom-right corner curls up toward the top-left
+  peelAnims = [
+    note.animate([
+      { clipPath: "polygon(0 0, 100% 0, 100% 100%, 100% 100%, 0 100%)", transform: `rotate(${note.style.getPropertyValue("--r")})` },
+      { clipPath: "polygon(0 0, 100% 0, 100% 30%, 30% 100%, 0 100%)", transform: `rotate(${note.style.getPropertyValue("--r")}) translateY(-4px) scale(1.04)` },
+    ], { duration: curlTime, easing: curlEase, fill: "forwards" }),
+    flap.animate([
+      { clipPath: "polygon(100% 100%, 100% 100%, 100% 100%)" },
+      { clipPath: "polygon(100% 30%, 30% 100%, 30% 30%)" },
+    ], { duration: curlTime, easing: curlEase, fill: "forwards" }),
+  ];
+
+  // 2) the note lifts off and grows into the journal page
+  setTimeout(() => {
+    const from = note.getBoundingClientRect();
+    page.style.animation = "none";
+    journal.showModal();
+    page.scrollTop = 0;
+    const to = page.getBoundingClientRect();
+    const dx = from.left + from.width / 2 - (to.left + to.width / 2);
+    const dy = from.top + from.height / 2 - (to.top + to.height / 2);
+    const r = note.style.getPropertyValue("--r") || "0deg";
+
+    peelAnims.push(
+      note.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120, fill: "forwards" }),
+      page.animate([
+        { transform: `translate(${dx}px, ${dy}px) rotate(${r}) scale(${from.width / to.width}, ${from.height / to.height})`, backgroundColor: "#dfe4ff" },
+        { transform: "none", backgroundColor: "#fdfdfb" },
+      ], { duration: growTime, easing: "cubic-bezier(0.2, 0.9, 0.3, 1.04)" }),
+      journalContent.animate([{ opacity: 0 }, { opacity: 0, offset: 0.55 }, { opacity: 1 }], { duration: growTime }),
+    );
+  }, curlTime);
+}
+
+function resetPeel(note) {
+  peelAnims.forEach((a) => a.cancel());
+  peelAnims = [];
+  note.querySelector(".peel-flap")?.remove();
+  journal.querySelector(".page").style.animation = "";
+}
+
+const curlTime = 450;
+const growTime = 550;
+const curlEase = "cubic-bezier(0.45, 0, 0.25, 1)";
 
 document.querySelectorAll(".scrap[data-entry]").forEach((item) => {
   let startX = 0;
