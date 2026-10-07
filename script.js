@@ -101,9 +101,11 @@ function openEntry(item) {
   setupStacks(journalContent);
 
   const isTicket = item.classList.contains("ticket");
-  item.classList.add(isTicket ? "is-ripping" : "is-opening");
+  const isSticky = item.classList.contains("sticky");
+  item.classList.add(isTicket ? "is-ripping" : isSticky ? "is-peeling" : "is-opening");
+  journal.classList.toggle("from-sticky", isSticky);
 
-  const wait = reduceMotion ? 0 : isTicket ? 800 : 350;
+  const wait = reduceMotion ? 0 : isTicket ? 800 : isSticky ? 700 : 350;
   setTimeout(() => {
     journal.showModal();
     journal.querySelector(".page").scrollTop = 0;
@@ -136,7 +138,8 @@ journal.addEventListener("click", (e) => {
 });
 
 journal.addEventListener("close", () => {
-  openedItem.classList.remove("is-ripping", "is-opening");
+  openedItem.classList.remove("is-ripping", "is-opening", "is-peeling");
+  journalContent.replaceChildren();
   openedItem.focus();
   openedItem = null;
 });
